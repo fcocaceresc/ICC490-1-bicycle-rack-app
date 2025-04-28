@@ -86,19 +86,38 @@ public class BicycleRackService {
 
     public void updateStudentId(int recordId, String newStudentId) {
         Record record = getRecordById(recordId);
-        validateUpdateStudentId(record, newStudentId);
+        validateUpdate(record, newStudentId, "student ID");
         record.getStudent().setId(newStudentId);
     }
 
-    private void validateUpdateStudentId(Record record, String newStudentId) {
+    public void updateStudentName(int recordId, String newStudentName) {
+        Record record = getRecordById(recordId);
+        validateUpdate(record, newStudentName, "student name");
+        record.getStudent().setName(newStudentName);
+    }
+
+    private void validateUpdate(Record record, String updateValue, String updateType) {
         if (record == null) {
             throw new IllegalArgumentException("Record not found");
         }
-        if (newStudentId == null || newStudentId.isEmpty()) {
-            throw new IllegalArgumentException("New student ID can't be empty");
+        if (updateValue == null || updateValue.isEmpty()) {
+            throw new IllegalArgumentException("New " + updateType + " can't be empty");
         }
-        if (record.getStudent().getId().equals(newStudentId)) {
-            throw new IllegalArgumentException("New student ID is the same as the current one");
+
+        String currentValue = getCurrentValue(record, updateType);
+        if (currentValue.equals(updateValue)) {
+            throw new IllegalArgumentException("New " + updateType + " is the same as the current one");
         }
     }
+
+    private String getCurrentValue(Record record, String updateType) {
+        switch (updateType) {
+            case "student ID":
+                return record.getStudent().getId();
+            case "student name":
+                return record.getStudent().getName();
+        }
+        return updateType;
+    }
+
 }
