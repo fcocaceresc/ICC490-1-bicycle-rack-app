@@ -79,4 +79,8 @@ public class BicycleRackService {
             throw new IllegalStateException("The student is already checked out");
         }
     }
+
+    public ArrayList<Record> getRecords() {
+        return new ArrayList<>(records);
+    }
 }
