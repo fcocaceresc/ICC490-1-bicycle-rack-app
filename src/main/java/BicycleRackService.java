@@ -1,3 +1,4 @@
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class BicycleRackService {
@@ -32,5 +33,29 @@ public class BicycleRackService {
             }
         }
         return false;
+    }
+
+    public void checkOutByRecordId(int recordId) {
+        Record recordToCheckOut = getRecordById(recordId);
+        validateCheckOutByRecordId(recordToCheckOut);
+        recordToCheckOut.setCheckOut(LocalDateTime.now());
+    }
+
+    private Record getRecordById(int recordId) {
+        for (Record record : records) {
+            if (record.getId() == recordId) {
+                return record;
+            }
+        }
+        return null;
+    }
+
+    private void validateCheckOutByRecordId(Record recordToCheckOut) {
+        if (recordToCheckOut == null) {
+            throw new IllegalArgumentException("Record not found");
+        }
+        if (recordToCheckOut.getCheckOut() != null) {
+            throw new IllegalStateException("Record is already checked out");
+        }
     }
 }
