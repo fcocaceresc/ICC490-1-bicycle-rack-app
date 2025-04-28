@@ -156,6 +156,64 @@ public class BicycleRackUI {
     }
 
     private void updateRecord() {
-        System.out.println("Update record");
+        System.out.println("[1] Update student ID");
+        System.out.println("[2] Update student name");
+        System.out.println("[3] Update bicycle description");
+        Integer option = readInteger();
+        if (option == null) {
+            return;
+        }
+        System.out.print("Enter the ID of the record to update: ");
+        Integer recordId = readInteger();
+        if (recordId == null) {
+            return;
+        }
+        updateRecordOptions(option, recordId);
+    }
+
+    private void updateRecordOptions(int option, int recordId) {
+        switch (option) {
+            case 1:
+                updateStudentIdRecord(recordId);
+                break;
+            case 2:
+                updateStudentNameRecord(recordId);
+                break;
+            case 3:
+                updateBicycleDescriptionRecord(recordId);
+                break;
+            default:
+                System.out.println("Invalid option");
+        }
+    }
+
+    private void updateStudentIdRecord(int recordId) {
+        System.out.print("Enter new student ID: ");
+        String newStudentId = scanner.nextLine().trim();
+        try {
+            service.updateStudentId(recordId, newStudentId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void updateStudentNameRecord(int recordId) {
+        System.out.print("Enter new student name: ");
+        String newStudentName = scanner.nextLine().trim();
+        try {
+            service.updateStudentName(recordId, newStudentName);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void updateBicycleDescriptionRecord(int recordId) {
+        System.out.print("Enter new bicycle description: ");
+        String newBicycleDescription = scanner.nextLine().trim();
+        try {
+            service.updateBicycleDescription(recordId, newBicycleDescription);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
