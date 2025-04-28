@@ -22,6 +22,7 @@ public class BicycleRackUI {
         do {
             showOptions();
             option = getOption();
+            executeOption(option);
         } while (option != options.size());
     }
 
@@ -44,5 +45,38 @@ public class BicycleRackUI {
             } catch (Exception e) {}
             System.out.print("Enter a whole number between 1 and " + options.size() + ": ");
         }
+    }
+
+    private void executeOption(int option) {
+        switch (option) {
+            case 1:
+                checkInBicycle();
+                break;
+            case 2:
+                checkOutBicycle();
+                break;
+            case 3:
+                listRecords();
+                break;
+            case 4:
+                updateRecord();
+                break;
+        }
+    }
+
+    private void checkInBicycle() {
+        System.out.println("Check in bicycle");
+    }
+
+    private void checkOutBicycle() {
+        System.out.println("Check out bicycle");
+    }
+
+    private void listRecords() {
+        System.out.println("List records");
+    }
+
+    private void updateRecord() {
+        System.out.println("Update record");
     }
 }
