@@ -76,4 +76,23 @@ class BicycleRackServiceTest {
         Exception exception = assertThrows(IllegalStateException.class, () -> bicycleRackService.checkOutByRecordId(record.getId()));
         assertEquals("Record is already checked out", exception.getMessage());
     }
+
+    @Test
+    void checkOutByStudentId() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        bicycleRackService.checkOutByStudentId(student.getId());
+        assertNotNull(record.getCheckOut());
+    }
+
+    @Test
+    void alreadyCheckedOutRecordCheckOutByStudentId() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        bicycleRackService.checkIn(student, bicycleDescription);
+        bicycleRackService.checkOutByStudentId(student.getId());
+        Exception exception = assertThrows(IllegalStateException.class, () -> bicycleRackService.checkOutByStudentId(student.getId()));
+        assertEquals("The student is already checked out", exception.getMessage());
+    }
 }
