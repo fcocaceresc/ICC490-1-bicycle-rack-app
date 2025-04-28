@@ -95,4 +95,50 @@ class BicycleRackServiceTest {
         Exception exception = assertThrows(IllegalStateException.class, () -> bicycleRackService.checkOutByStudentId(student.getId()));
         assertEquals("The student is already checked out", exception.getMessage());
     }
+
+    @Test
+    void updateStudentId() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        String newStudentId = "2";
+        bicycleRackService.updateStudentId(record.getId(), newStudentId);
+        assertEquals(newStudentId, record.getStudent().getId());
+    }
+
+    @Test
+    void nullStudentIdUpdateStudentId() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        String newStudentId = null;
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bicycleRackService.updateStudentId(record.getId(), newStudentId));
+        assertEquals("New student ID can't be empty", exception.getMessage());
+    }
+
+    @Test
+    void emptyStudentIdUpdateStudentId() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        String newStudentId = "";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bicycleRackService.updateStudentId(record.getId(), newStudentId));
+        assertEquals("New student ID can't be empty", exception.getMessage());
+    }
+
+    @Test
+    void nonExistingRecordUpdateStudentId() {
+        String newStudentId = "2";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bicycleRackService.updateStudentId(1, newStudentId));
+        assertEquals("Record not found", exception.getMessage());
+    }
+
+    @Test
+    void sameStudentIdUpdateStudentId() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bicycleRackService.updateStudentId(record.getId(), "1"));
+        assertEquals("New student ID is the same as the current one", exception.getMessage());
+    }
 }
