@@ -65,7 +65,21 @@ public class BicycleRackUI {
     }
 
     private void checkInBicycle() {
-        System.out.println("Check in bicycle");
+        System.out.print("Enter student ID: ");
+        String studentId = scanner.nextLine().trim();
+        System.out.print("Enter student name: ");
+        String studentName = scanner.nextLine().trim();
+        Student student = new Student(studentId, studentName);
+
+        System.out.print("Enter bicycle description: ");
+        String bicycleDescription = scanner.nextLine().trim();
+        try {
+            service.checkIn(student, bicycleDescription);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        System.out.println("Bicycle checked in successfully");
     }
 
     private void checkOutBicycle() {
@@ -73,7 +87,21 @@ public class BicycleRackUI {
     }
 
     private void listRecords() {
-        System.out.println("List records");
+        ArrayList<Record> records = service.getRecords();
+        if (records.isEmpty()) {
+            System.out.println("No records found.");
+            return;
+        }
+        System.out.println();
+        for (Record record : records) {
+            System.out.println("Record ID: " + record.getId());
+            System.out.println("Student ID: " + record.getStudent().getId());
+            System.out.println("Student name: " + record.getStudent().getName());
+            System.out.println("Bicycle description: " + record.getBicycleDescription());
+            System.out.println("Check in: " + record.getCheckIn());
+            System.out.println("Check out: " + record.getCheckOut());
+            System.out.println();
+        }
     }
 
     private void updateRecord() {
