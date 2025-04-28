@@ -83,4 +83,22 @@ public class BicycleRackService {
     public ArrayList<Record> getRecords() {
         return new ArrayList<>(records);
     }
+
+    public void updateStudentId(int recordId, String newStudentId) {
+        Record record = getRecordById(recordId);
+        validateUpdateStudentId(record, newStudentId);
+        record.getStudent().setId(newStudentId);
+    }
+
+    private void validateUpdateStudentId(Record record, String newStudentId) {
+        if (record == null) {
+            throw new IllegalArgumentException("Record not found");
+        }
+        if (newStudentId == null || newStudentId.isEmpty()) {
+            throw new IllegalArgumentException("New student ID can't be empty");
+        }
+        if (record.getStudent().getId().equals(newStudentId)) {
+            throw new IllegalArgumentException("New student ID is the same as the current one");
+        }
+    }
 }
