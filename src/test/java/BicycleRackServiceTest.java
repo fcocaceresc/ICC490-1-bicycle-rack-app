@@ -51,4 +51,29 @@ class BicycleRackServiceTest {
         Exception exception = assertThrows(IllegalStateException.class, () -> bicycleRackService.checkIn(student, bicycleDescription));
         assertEquals("The student has a not checked out record", exception.getMessage());
     }
+
+    @Test
+    void checkOutByRecordId() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        bicycleRackService.checkOutByRecordId(record.getId());
+        assertNotNull(record.getCheckOut());
+    }
+
+    @Test
+    void notExistingRecordCheckOutByRecordId() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bicycleRackService.checkOutByRecordId(1));
+        assertEquals("Record not found", exception.getMessage());
+    }
+
+    @Test
+    void alreadyCheckedOutRecordCheckOutByRecordId() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        bicycleRackService.checkOutByRecordId(record.getId());
+        Exception exception = assertThrows(IllegalStateException.class, () -> bicycleRackService.checkOutByRecordId(record.getId()));
+        assertEquals("Record is already checked out", exception.getMessage());
+    }
 }
