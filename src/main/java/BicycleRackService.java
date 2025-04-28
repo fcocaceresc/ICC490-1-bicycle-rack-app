@@ -96,6 +96,12 @@ public class BicycleRackService {
         record.getStudent().setName(newStudentName);
     }
 
+    public void updateBicycleDescription(int recordId, String newBicycleDescription) {
+        Record record = getRecordById(recordId);
+        validateUpdate(record, newBicycleDescription, "bicycle description");
+        record.setBicycleDescription(newBicycleDescription);
+    }
+
     private void validateUpdate(Record record, String updateValue, String updateType) {
         if (record == null) {
             throw new IllegalArgumentException("Record not found");
@@ -116,6 +122,8 @@ public class BicycleRackService {
                 return record.getStudent().getId();
             case "student name":
                 return record.getStudent().getName();
+            case "bicycle description":
+                return record.getBicycleDescription();
         }
         return updateType;
     }
