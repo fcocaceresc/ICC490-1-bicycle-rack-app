@@ -83,7 +83,58 @@ public class BicycleRackUI {
     }
 
     private void checkOutBicycle() {
-        System.out.println("Check out bicycle");
+        System.out.println("[1] Check out by record ID");
+        System.out.println("[2] Check out by student ID");
+        Integer option = readInteger();
+        if (option == null) {
+            return;
+        }
+        switch (option) {
+            case 1:
+                checkOutByRecordId();
+                break;
+            case 2:
+                checkOutByStudentId();
+                break;
+            default:
+                System.out.println("Invalid option");
+        }
+    }
+
+    private void checkOutByRecordId() {
+        System.out.print("Enter the ID of the record to check out: ");
+        Integer recordId = readInteger();
+        if (recordId == null) {
+            return;
+        }
+        try {
+            service.checkOutByRecordId(recordId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        System.out.println("Bicycle checked out successfully");
+    }
+
+    private void checkOutByStudentId() {
+        System.out.print("Enter the student ID to check out: ");
+        String studentId = scanner.nextLine().trim();
+        try {
+            service.checkOutByStudentId(studentId);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        System.out.println("Bicycle checked out successfully");
+    }
+
+    private static Integer readInteger() {
+        try {
+            return Integer.parseInt(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("The input must be a whole number");
+            return null;
+        }
     }
 
     private void listRecords() {
