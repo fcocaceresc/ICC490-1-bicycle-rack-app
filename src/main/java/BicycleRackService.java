@@ -58,4 +58,25 @@ public class BicycleRackService {
             throw new IllegalStateException("Record is already checked out");
         }
     }
+
+    public void checkOutByStudentId(String studentId) {
+        Record recordToCheckOut = getNotCheckedOutRecordForStudent(studentId);
+        validateCheckOutByStudentId(recordToCheckOut);
+        recordToCheckOut.setCheckOut(LocalDateTime.now());
+    }
+
+    private Record getNotCheckedOutRecordForStudent(String studentId) {
+        for (Record record : records) {
+            if (record.getStudent().getId().equals(studentId) && record.getCheckOut() == null) {
+                return record;
+            }
+        }
+        return null;
+    }
+
+    private void validateCheckOutByStudentId(Record recordToCheckOut) {
+        if (recordToCheckOut == null) {
+            throw new IllegalStateException("The student is already checked out");
+        }
+    }
 }
