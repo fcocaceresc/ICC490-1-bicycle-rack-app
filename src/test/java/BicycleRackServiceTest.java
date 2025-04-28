@@ -187,4 +187,50 @@ class BicycleRackServiceTest {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> bicycleRackService.updateStudentName(record.getId(), "amadeus"));
         assertEquals("New student name is the same as the current one", exception.getMessage());
     }
+
+    @Test
+    void updateBicycleDescription() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        String newBicycleDescription = "bmx";
+        bicycleRackService.updateBicycleDescription(record.getId(), newBicycleDescription);
+        assertEquals(newBicycleDescription, record.getBicycleDescription());
+    }
+
+    @Test
+    void nullBicycleDescriptionUpdateBicycleDescription() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        String newBicycleDescription = null;
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bicycleRackService.updateBicycleDescription(record.getId(), newBicycleDescription));
+        assertEquals("New bicycle description can't be empty", exception.getMessage());
+    }
+
+    @Test
+    void emptyBicycleDescriptionUpdateBicycleDescription() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        String newBicycleDescription = "";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bicycleRackService.updateBicycleDescription(record.getId(), newBicycleDescription));
+        assertEquals("New bicycle description can't be empty", exception.getMessage());
+    }
+
+    @Test
+    void nonExistingRecordUpdateBicycleDescription() {
+        String newBicycleDescription = "oxford";
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bicycleRackService.updateBicycleDescription(1, newBicycleDescription));
+        assertEquals("Record not found", exception.getMessage());
+    }
+
+    @Test
+    void sameBicycleDescriptionUpdateBicycleDescription() {
+        Student student = new Student("1", "amadeus");
+        String bicycleDescription = "oxford";
+        Record record = bicycleRackService.checkIn(student, bicycleDescription);
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bicycleRackService.updateBicycleDescription(record.getId(), bicycleDescription));
+        assertEquals("New bicycle description is the same as the current one", exception.getMessage());
+    }
 }
