@@ -67,7 +67,43 @@ public class BicycleRackDao {
 
     public void createRecord(String studentId, String studentName, String bicycleDescription) {
         DaoValidator.validateCreateRecordInput(studentId, studentName, bicycleDescription);
+        validateBicycleRackCapacity();
         executeCreateRecord(studentId, studentName, bicycleDescription);
+    }
+
+    private void validateBicycleRackCapacity() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DriverManager.getConnection(this.databaseUrl);
+            String query = "SELECT COUNT(*) FROM records WHERE check_out IS NULL";
+            preparedStatement = connection.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                int bicycleRackCapacity = ConfigReader.getIntValue("bicycleRack.maxCapacity");
+                if (count >= bicycleRackCapacity) {
+                    throw new IllegalStateException("The bicycle rack is full");
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private void executeCreateRecord(String studentId, String studentName, String bicycleDescription) {
