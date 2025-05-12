@@ -68,6 +68,7 @@ public class BicycleRackDao {
     public void createRecord(String studentId, String studentName, String bicycleDescription) {
         DaoValidator.validateCreateRecordInput(studentId, studentName, bicycleDescription);
         validateBicycleRackCapacity();
+        validateStudentHasANotCheckedOutRecord(studentId);
         executeCreateRecord(studentId, studentName, bicycleDescription);
     }
 
@@ -86,6 +87,38 @@ public class BicycleRackDao {
                 if (count >= bicycleRackCapacity) {
                     throw new IllegalStateException("The bicycle rack is full");
                 }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void validateStudentHasANotCheckedOutRecord(String studentId) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DriverManager.getConnection(this.databaseUrl);
+            String query = "SELECT * FROM records WHERE student_id = ? AND check_out IS NULL";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, studentId);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                throw new IllegalStateException("The student has a not checked out record");
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
