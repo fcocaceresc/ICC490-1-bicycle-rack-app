@@ -66,6 +66,11 @@ public class BicycleRackDao {
     }
 
     public void createRecord(String studentId, String studentName, String bicycleDescription) {
+        DaoValidator.validateCreateRecordInput(studentId, studentName, bicycleDescription);
+        executeCreateRecord(studentId, studentName, bicycleDescription);
+    }
+
+    private void executeCreateRecord(String studentId, String studentName, String bicycleDescription) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
