@@ -129,4 +129,12 @@ class BicycleRackDaoTest {
         });
         assertEquals("The student has a not checked out record", exception.getMessage());
     }
+
+    @Test
+    void checkOutRecord() {
+        bicycleRackDao.createRecord("4", "amadeus", "oxford");
+        bicycleRackDao.checkOutRecord(1);
+        Record record = bicycleRackDao.getRecords().getFirst();
+        assertNotNull(record.getCheckOut());
+    }
 }
