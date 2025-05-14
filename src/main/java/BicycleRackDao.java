@@ -227,6 +227,34 @@ public class BicycleRackDao {
         }
     }
 
+    public void updateRecord(int id, String studentId, String studentName, String bicycleDescription) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = DriverManager.getConnection(this.databaseUrl);
+            String query = "UPDATE records SET student_id = ?, student_name = ?, bicycle_description = ? WHERE id = ?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, studentId.trim());
+            preparedStatement.setString(2, studentName.trim());
+            preparedStatement.setString(3, bicycleDescription.trim());
+            preparedStatement.setInt(4, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     private Record mapResultSetToRecord(ResultSet resultSet) {
         Record record;
         try {
