@@ -66,7 +66,7 @@ public class BicycleRackDao {
     }
 
     public void createRecord(String studentId, String studentName, String bicycleDescription) {
-        DaoValidator.validateCreateRecordInput(studentId, studentName, bicycleDescription);
+        DaoValidator.validateRecordInput(studentId, studentName, bicycleDescription);
         validateBicycleRackCapacity();
         validateStudentHasANotCheckedOutRecord(studentId);
         executeCreateRecord(studentId, studentName, bicycleDescription);
@@ -228,6 +228,10 @@ public class BicycleRackDao {
     }
 
     public void updateRecord(int id, String studentId, String studentName, String bicycleDescription) {
+        DaoValidator.validateRecordInput(studentId, studentName, bicycleDescription);
+        executeUpdateRecord(id, studentId, studentName, bicycleDescription);
+    }
+    private void executeUpdateRecord(int id, String studentId, String studentName, String bicycleDescription) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {

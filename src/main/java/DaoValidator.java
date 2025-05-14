@@ -1,5 +1,5 @@
 public class DaoValidator {
-    public static void validateCreateRecordInput(String studentId, String studentName, String bicycleDescription) {
+    public static void validateRecordInput(String studentId, String studentName, String bicycleDescription) {
         DaoValidator.validateStudentId(studentId);
         DaoValidator.validateStudentName(studentName);
         DaoValidator.validateBicycleDescription(bicycleDescription);
