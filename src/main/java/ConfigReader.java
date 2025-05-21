@@ -17,8 +17,16 @@ public class ConfigReader {
         }
     }
 
-    public static int getIntValue(String name) {
+    public static String getStringValue(String name) {
         String value = properties.getProperty(name);
+        if (value == null) {
+            throw new IllegalArgumentException("Property not found");
+        }
+        return value;
+    }
+
+    public static int getIntValue(String name) {
+        String value = getStringValue(name);
         if (value == null) {
             throw new IllegalArgumentException("Property not found");
         }
