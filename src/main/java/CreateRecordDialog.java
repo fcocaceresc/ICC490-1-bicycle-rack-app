@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CreateRecordDialog extends JDialog {
+    private final BicycleRackDao bicycleRackDao;
+    private final Runnable onRecordCreated;
     private JPanel mainPanel;
     private JLabel studentIdLabel;
     private JTextField studentIdField;
@@ -12,8 +14,10 @@ public class CreateRecordDialog extends JDialog {
     private JButton createButton;
     private JButton cancelButton;
 
-    public CreateRecordDialog(JFrame parent) {
+    public CreateRecordDialog(JFrame parent, BicycleRackDao bicycleRackDao, Runnable onRecordCreated) {
         super(parent, "Create Record");
+        this.bicycleRackDao = bicycleRackDao;
+        this.onRecordCreated = onRecordCreated;
         initializeComponents();
         setupLayout();
 
@@ -46,7 +50,9 @@ public class CreateRecordDialog extends JDialog {
 
     private void initializeButtons() {
         createButton = new JButton("Create");
+        createButton.addActionListener(e -> handleCreateRecord());
         cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(e -> dispose());
     }
 
     private void setupLayout() {
@@ -90,5 +96,19 @@ public class CreateRecordDialog extends JDialog {
         mainPanel.add(cancelButton, gbc);
 
         setContentPane(mainPanel);
+    }
+
+    private void handleCreateRecord() {
+        String studentId = studentIdField.getText();
+        String studentName = studentNameField.getText();
+        String bicycleDescription = bicycleDescriptionField.getText();
+        try {
+            bicycleRackDao.createRecord(studentId, studentName, bicycleDescription);
+            JOptionPane.showMessageDialog(this, "Record created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            onRecordCreated.run();
+            dispose();
+        } catch (Exception exception) {
+            JOptionPane.showMessageDialog(this, exception.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

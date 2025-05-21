@@ -42,8 +42,9 @@ public class Dashboard extends JFrame {
     private void initializeCreateRecordButton() {
         createRecordButton = new JButton("Create Record");
         createRecordButton.addActionListener(e -> {
-            CreateRecordDialog createRecordDialog = new CreateRecordDialog(this);
+            CreateRecordDialog createRecordDialog = new CreateRecordDialog(this, bicycleRackDao, this::loadRecords);
             createRecordDialog.setVisible(true);
+            loadRecords();
         });
     }
 
