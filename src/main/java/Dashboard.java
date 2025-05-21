@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Dashboard extends JFrame {
     private JPanel mainPanel;
     private RecordsTableModel recordsTableModel;
+    private JButton createRecordButton;
     private JTable recordsTable;
     private JScrollPane tableScrollPane;
     private BicycleRackDao bicycleRackDao;
@@ -12,7 +13,7 @@ public class Dashboard extends JFrame {
     public Dashboard() {
         initializeDao();
         setupFrame();
-        initializeRecordsTable();
+        initializeComponents();
         setupLayout();
         loadRecords();
     }
@@ -27,18 +28,35 @@ public class Dashboard extends JFrame {
         setSize(1280, 720);
     }
 
+    private void initializeComponents() {
+        initializeRecordsTable();
+        initializeCreateRecordButton();
+    }
+
     private void initializeRecordsTable() {
         recordsTableModel = new RecordsTableModel();
         recordsTable = new JTable(recordsTableModel);
         tableScrollPane = new JScrollPane(recordsTable);
     }
 
+    private void initializeCreateRecordButton() {
+        createRecordButton = new JButton("Create Record");
+        createRecordButton.addActionListener(e -> {
+            CreateRecordDialog createRecordDialog = new CreateRecordDialog(this);
+            createRecordDialog.setVisible(true);
+        });
+    }
+
     private void setupLayout() {
         mainPanel = new JPanel(new GridBagLayout());
         setContentPane(mainPanel);
         GridBagConstraints gbc = new GridBagConstraints();
+
         gbc.gridx = 0;
         gbc.gridy = 0;
+        mainPanel.add(createRecordButton, gbc);
+
+        gbc.gridy = 1;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
