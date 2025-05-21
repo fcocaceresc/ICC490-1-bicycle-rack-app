@@ -2,13 +2,17 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
 public class RecordsTableModel extends AbstractTableModel {
-    private final String[] columnNames = {"ID", "Student ID", "Student Name", "Bicycle Description", "Check In", "Check Out"};
+    private final String[] columnNames = {"ID", "Student ID", "Student Name", "Bicycle Description", "Check In Datetime", "Check Out Datetime", "Check Out"};
     private final ArrayList<Record> records = new ArrayList<>();
 
     public void setRecords(ArrayList<Record> records) {
         this.records.clear();
         this.records.addAll(records);
         fireTableDataChanged();
+    }
+
+    public Record getRecordAt(int rowIndex) {
+        return records.get(rowIndex);
     }
 
     @Override
@@ -36,7 +40,13 @@ public class RecordsTableModel extends AbstractTableModel {
             case 3 -> record.getBicycleDescription();
             case 4 -> record.getCheckIn();
             case 5 -> record.getCheckOut();
+            case 6 -> "Check Out";
             default -> null;
         };
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return columnIndex == 6;
     }
 }

@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 public class Dashboard extends JFrame {
@@ -36,7 +37,24 @@ public class Dashboard extends JFrame {
     private void initializeRecordsTable() {
         recordsTableModel = new RecordsTableModel();
         recordsTable = new JTable(recordsTableModel);
+        setupCheckOutButtonColumn(recordsTable, recordsTableModel, bicycleRackDao, this::loadRecords);
         tableScrollPane = new JScrollPane(recordsTable);
+    }
+
+    private void setupCheckOutButtonColumn(JTable table, RecordsTableModel recordsTableModel, BicycleRackDao bicycleRackDao, Runnable onCheckOut) {
+        table.getColumnModel().getColumn(6).setCellRenderer(new JTableComponentRenderer(table.getDefaultRenderer(String.class), recordsTableModel));
+        table.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor(e -> handleCheckOutButtonClick(e, recordsTableModel, bicycleRackDao, onCheckOut)));
+    }
+
+    private void handleCheckOutButtonClick(ActionEvent e, RecordsTableModel recordsTableModel, BicycleRackDao dao, Runnable onCheckOut) {
+        int row = Integer.parseInt(e.getActionCommand());
+        Record record = recordsTableModel.getRecordAt(row);
+        if (record.getCheckOut() == null) {
+            dao.checkOutRecord(record.getId());
+            onCheckOut.run();
+        } else {
+            JOptionPane.showMessageDialog(this, "The record has already been checked out.");
+        }
     }
 
     private void initializeCreateRecordButton() {
