@@ -2,7 +2,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 
 public class RecordsTableModel extends AbstractTableModel {
-    private final String[] columnNames = {"ID", "Student ID", "Student Name", "Bicycle Description", "Check In Datetime", "Check Out Datetime", "Check Out"};
+    private final String[] columnNames = {"ID", "Student ID", "Student Name", "Bicycle Description", "Check In Datetime", "Check Out Datetime", "Check Out", "Edit"};
     private final ArrayList<Record> records = new ArrayList<>();
 
     public void setRecords(ArrayList<Record> records) {
@@ -41,12 +41,13 @@ public class RecordsTableModel extends AbstractTableModel {
             case 4 -> record.getCheckIn();
             case 5 -> record.getCheckOut();
             case 6 -> "Check Out";
+            case 7 -> "Edit";
             default -> null;
         };
     }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 6;
+        return columnIndex == 6 || columnIndex == 7;
     }
 }

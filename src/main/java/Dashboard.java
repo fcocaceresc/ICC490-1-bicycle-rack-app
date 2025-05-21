@@ -38,12 +38,18 @@ public class Dashboard extends JFrame {
         recordsTableModel = new RecordsTableModel();
         recordsTable = new JTable(recordsTableModel);
         setupCheckOutButtonColumn(recordsTable, recordsTableModel, bicycleRackDao, this::loadRecords);
+        setupEditButtonColumn(recordsTable, recordsTableModel, bicycleRackDao, this::loadRecords);
         tableScrollPane = new JScrollPane(recordsTable);
     }
 
     private void setupCheckOutButtonColumn(JTable table, RecordsTableModel recordsTableModel, BicycleRackDao bicycleRackDao, Runnable onCheckOut) {
         table.getColumnModel().getColumn(6).setCellRenderer(new JTableComponentRenderer(table.getDefaultRenderer(String.class), recordsTableModel));
         table.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor(e -> handleCheckOutButtonClick(e, recordsTableModel, bicycleRackDao, onCheckOut)));
+    }
+
+    private void setupEditButtonColumn(JTable table, RecordsTableModel recordsTableModel, BicycleRackDao bicycleRackDao, Runnable onEdit) {
+        table.getColumnModel().getColumn(7).setCellRenderer(new JTableComponentRenderer(table.getDefaultRenderer(String.class), recordsTableModel));
+        table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(e -> handleEditButtonClick(e, recordsTableModel, bicycleRackDao, onEdit)));
     }
 
     private void handleCheckOutButtonClick(ActionEvent e, RecordsTableModel recordsTableModel, BicycleRackDao dao, Runnable onCheckOut) {
@@ -55,6 +61,13 @@ public class Dashboard extends JFrame {
         } else {
             JOptionPane.showMessageDialog(this, "The record has already been checked out.");
         }
+    }
+
+    private void handleEditButtonClick(ActionEvent e, RecordsTableModel recordsTableModel, BicycleRackDao dao, Runnable onEdit) {
+        int row = Integer.parseInt(e.getActionCommand());
+        Record record = recordsTableModel.getRecordAt(row);
+        EditRecordDialog editRecordDialog = new EditRecordDialog(this, dao, record, onEdit);
+        editRecordDialog.setVisible(true);
     }
 
     private void initializeCreateRecordButton() {

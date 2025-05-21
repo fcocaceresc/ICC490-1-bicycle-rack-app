@@ -20,6 +20,10 @@ public class JTableComponentRenderer implements TableCellRenderer {
             button.setEnabled(!isCheckedOut);
             return button;
         }
+        if (column == 7) {
+            JButton button = new JButton(value == null ? "Edit" : value.toString());
+            return button;
+        }
         return defaultRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
     }
 }
